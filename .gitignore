@@ -1,0 +1,51 @@
+# --- Dependencias ---
+node_modules/
+**/node_modules/
+
+# --- Logs ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Compilaciones / artefactos ---
+dist/
+build/
+.tmp/
+.temp/
+.cache/
+.cache-loader/
+coverage/
+
+# --- Expo / React Native ---
+.expo/
+.expo-shared/
+web-build/
+
+# --- TypeScript ---
+*.tsbuildinfo
+
+# --- Entornos ---
+.env
+.env.*
+!.env.example
+
+# --- Strapi (server) ---
+server/.cache/
+server/build/
+# Sube archivos generados por usuarios a producción; por defecto se ignoran.
+# Borra estas líneas si quieres versionar las imágenes seed.
+server/public/uploads/*
+!server/public/uploads/.gitkeep
+
+# --- Sistemas / Editores ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# --- Misc ---
+*.pid
+*.seed

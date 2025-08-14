@@ -1,0 +1,39 @@
+# Normaliza finales de línea
+* text=auto eol=lf
+
+# Imágenes binarias
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.ttf binary
+
+# Lockfiles (no normalizar)
+package-lock.json -text
+pnpm-lock.yaml -text
+yarn.lock -text
+
+# Diff amigable para common lockfiles (GitHub lo reconoce)
+*.md diff=markdown
+
+# TypeScript como texto normal
+*.ts text eol=lf
+*.tsx text eol=lf
+
+# Shell / scripts
+*.sh text eol=lf
+*.ps1 text eol=lf
+
+# Evitar CRLF en JSON / config
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+
+# Patch para evitar merges raros en .env
+.env merge=union
