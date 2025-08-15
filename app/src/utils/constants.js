@@ -1,6 +1,6 @@
 /**
  * Configuración global de la aplicación
- * Detecta automáticamente si está corriendo en Codespaces o localhost
+ * Backend SIEMPRE en Strapi Cloud - No se usa backend local
  */
 
 // Función para detectar el entorno
@@ -20,22 +20,16 @@ function detectEnvironment() {
 
 const { isCodespaces, isLocal } = detectEnvironment();
 
-// URLs base dependiendo del entorno
+// URLs base dependiendo del entorno (solo frontend, backend siempre en la nube)
 const getBaseURLs = () => {
   if (isCodespaces) {
-    // En Codespaces, usar las URLs forwarded
-    const codespacesDomain = 'ubiquitous-parakeet-rxwxqr74gpx2xx47.github.dev';
     return {
-      FRONTEND_URL: `https://${codespacesDomain}`,
-      BACKEND_URL: `https://${codespacesDomain.replace('github.dev', 'github.dev').replace('https://', 'https://').replace('.github.dev', '-1337.app.github.dev')}`,
-      // Backup a Strapi Cloud si no funciona el forwarding
+      FRONTEND_URL: `https://ubiquitous-parakeet-rxwxqr74gpx2xx47.github.dev`,
       STRAPI_CLOUD: "https://supportive-fireworks-d01261f76f.strapiapp.com"
     };
   } else {
-    // Local development
     return {
       FRONTEND_URL: "http://localhost:8081",
-      BACKEND_URL: "http://localhost:1337",
       STRAPI_CLOUD: "https://supportive-fireworks-d01261f76f.strapiapp.com"
     };
   }
@@ -52,14 +46,10 @@ export const ENV = {
   // URLs dinámicas
   FRONTEND_URL: urls.FRONTEND_URL,
 
-  // Backend - Preferir Strapi Cloud para estabilidad
+  // Backend - SIEMPRE Strapi Cloud
   API_URL: `${urls.STRAPI_CLOUD}/api`,
   ADMIN_URL: `${urls.STRAPI_CLOUD}/admin`,
   BASE_URL: urls.STRAPI_CLOUD,
-
-  // URLs alternativas para desarrollo local
-  LOCAL_BACKEND_URL: urls.BACKEND_URL,
-  LOCAL_API_URL: `${urls.BACKEND_URL}/api`,
 
   // Configuración de red
   TIMEOUT: 15000, // 15 segundos para Codespaces (conexión más lenta)
@@ -103,7 +93,6 @@ if (ENV.DEBUG) {
 
   if (ENV.IS_CODESPACES) {
     console.log("☁️ Running in GitHub Codespaces");
-    console.log("🔗 Local Backend URL:", ENV.LOCAL_BACKEND_URL);
   }
 
   if (ENV.VERBOSE_LOGS) {

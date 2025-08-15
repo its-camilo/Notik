@@ -12,7 +12,6 @@
 
   "forwardPorts": [
     8081,
-    1337,
     19000,
     19001,
     19002,
@@ -22,10 +21,6 @@
   "portsAttributes": {
     "8081": {
       "label": "Expo Dev Server",
-      "onAutoForward": "notify"
-    },
-    "1337": {
-      "label": "Strapi Backend",
       "onAutoForward": "notify"
     },
     "19000": {
