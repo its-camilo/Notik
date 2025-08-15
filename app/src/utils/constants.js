@@ -24,7 +24,7 @@ const { isCodespaces, isLocal } = detectEnvironment();
 const getBaseURLs = () => {
   if (isCodespaces) {
     return {
-      FRONTEND_URL: `https://ubiquitous-parakeet-rxwxqr74gpx2xx47.github.dev`,
+      FRONTEND_URL: `https://vigilant-spoon-5959j4vqjjr3v9xq.github.dev`,
       STRAPI_CLOUD: "https://supportive-fireworks-d01261f76f.strapiapp.com"
     };
   } else {

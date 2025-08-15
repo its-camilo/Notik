@@ -32,7 +32,7 @@ cd app && npm start
 
 | Servicio | URL | Descripción |
 |----------|-----|-------------|
-| **Frontend** | `https://ubiquitous-parakeet-rxwxqr74gpx2xx47.github.dev` | Aplicación principal |
+| **Frontend** | `https://vigilant-spoon-5959j4vqjjr3v9xq.github.dev` | Aplicación principal |
 | **Backend API** | `https://supportive-fireworks-d01261f76f.strapiapp.com/api` | API de Strapi (Cloud) |
 | **Admin Panel** | `https://supportive-fireworks-d01261f76f.strapiapp.com/admin` | Panel de administración |
 | **Expo DevTools** | Puerto 19001 | Herramientas de desarrollo de Expo |
@@ -95,7 +95,7 @@ npm run lint          # Linting del código
 
 ### Expo no se conecta
 1. Usa el modo web: `npm run web`
-2. O abre directamente: `https://ubiquitous-parakeet-rxwxqr74gpx2xx47.github.dev`
+2. O abre directamente: `https://vigilant-spoon-5959j4vqjjr3v9xq.github.dev`
 
 ### Problemas de conexión con Strapi
 - La app está configurada para usar **SOLO Strapi Cloud**

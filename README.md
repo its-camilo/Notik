@@ -79,7 +79,7 @@ Notik/
 
 ## 🌐 URLs del Proyecto
 
-- **Frontend**: https://ubiquitous-parakeet-rxwxqr74gpx2xx47.github.dev (Codespaces)
+- **Frontend**: https://vigilant-spoon-5959j4vqjjr3v9xq.github.dev (Codespaces)
 - **Backend API**: https://supportive-fireworks-d01261f76f.strapiapp.com/api
 - **Admin Panel**: https://supportive-fireworks-d01261f76f.strapiapp.com/admin
 
