@@ -40,11 +40,15 @@ server/public/uploads/*
 !server/public/uploads/.gitkeep
 
 # --- Sistemas / Editores ---
-.vscode/
+# .vscode/ - Mantenemos la configuración para Codespaces
 .idea/
 .DS_Store
 Thumbs.db
 *.swp
+
+# --- GitHub Codespaces ---
+.devcontainer/postCreateCommand.log
+.vscode/settings.json.backup
 
 # --- Misc ---
 *.pid

@@ -1,5 +1,25 @@
 {
-  "dependencies": {
-    "nativewind": "^4.1.23"
-  }
+  "name": "notik-workspace",
+  "version": "1.0.0",
+  "description": "Notik - Full Stack React Native + Strapi Application",
+  "private": true,
+  "scripts": {
+    "dev:app": "cd app && npm start",
+    "dev:server": "cd server && npm run develop",
+    "start": "cd app && npm start",
+    "build": "cd app && npm run build",
+    "lint": "cd app && npm run lint",
+    "install:all": "cd app && npm install && cd ../server && npm install",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/its-camilo/Notik.git"
+  },
+  "author": "Camilo",
+  "license": "MIT"
 }

@@ -1,0 +1,75 @@
+{
+  "name": "Notik Development Environment",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-18-bullseye",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "18"
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  "forwardPorts": [
+    8081,
+    1337,
+    19000,
+    19001,
+    19002,
+    3000
+  ],
+
+  "portsAttributes": {
+    "8081": {
+      "label": "Expo Dev Server",
+      "onAutoForward": "notify"
+    },
+    "1337": {
+      "label": "Strapi Backend",
+      "onAutoForward": "notify"
+    },
+    "19000": {
+      "label": "Expo Metro Bundler",
+      "onAutoForward": "silent"
+    },
+    "19001": {
+      "label": "Expo Dev Tools",
+      "onAutoForward": "silent"
+    },
+    "19002": {
+      "label": "Expo Tunnel",
+      "onAutoForward": "silent"
+    },
+    "3000": {
+      "label": "Web Preview",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  "postCreateCommand": "npm run install:all",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-typescript-next",
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-json",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-eslint",
+        "expo.vscode-expo-tools",
+        "ms-vscode.vscode-react-native"
+      ],
+      "settings": {
+        "typescript.preferences.quoteStyle": "single",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "emmet.includeLanguages": {
+          "typescript": "typescriptreact",
+          "javascript": "javascriptreact"
+        }
+      }
+    }
+  },
+
+  "remoteUser": "node"
+}

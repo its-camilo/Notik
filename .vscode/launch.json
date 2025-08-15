@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "name": "Debug Expo App",
+      "request": "launch",
+      "type": "reactnative",
+      "cwd": "${workspaceFolder}/app",
+      "platform": "ios"
+    },
+    {
+      "name": "Debug Expo Web",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:19006",
+      "webRoot": "${workspaceFolder}/app"
+    },
+    {
+      "name": "Attach to Metro",
+      "request": "attach",
+      "type": "reactnative",
+      "cwd": "${workspaceFolder}/app"
+    }
+  ]
+}
