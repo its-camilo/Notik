@@ -1,21 +1,20 @@
-import { StyleSheet } from 'react-native';
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+
+import { StyleSheet, View } from 'react-native';
 import { KeepAliveIndicator } from '@/components/keepalive';
+import { MainScreen } from '@/src/screens/MainScreen';
+import { AuthScreen } from '@/src/screens/AuthScreen';
+
+const isAuthenticated = false; // Cambia a true para mostrar MainScreen
 
 export default function HomeScreen() {
   return (
-    <ThemedView>
-      <ThemedView style={styles.indicatorContainer}>
+    <View style={{ flex: 1, backgroundColor: '#fff' }}>
+      {/* <View style={styles.indicatorContainer}>
         <KeepAliveIndicator />
-      </ThemedView>
-      <ThemedView>
-        <ThemedText>
-          Hello World!
-        </ThemedText>
-      </ThemedView>
-    </ThemedView>
+      </View> */}
+      {isAuthenticated ? <MainScreen /> : <AuthScreen />}
+    </View>
   );
 }
 

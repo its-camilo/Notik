@@ -20,5 +20,8 @@
     "url": "https://github.com/its-camilo/Notik.git"
   },
   "author": "Camilo",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "yup": "^1.7.0"
+  }
 }

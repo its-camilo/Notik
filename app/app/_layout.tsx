@@ -6,9 +6,12 @@ import 'react-native-reanimated';
 import '../styles/globals.css';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { useWebTitle } from '@/hooks/useWebTitle';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  useWebTitle(); // Ensure web title is always "Notik"
+
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });

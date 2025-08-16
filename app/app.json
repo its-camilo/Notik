@@ -22,7 +22,8 @@
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png",
-      "name": "Notik"
+      "name": "Notik",
+      "template": "./web/index.html"
     },
     "plugins": [
       "expo-router",
