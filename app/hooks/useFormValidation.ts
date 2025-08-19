@@ -101,10 +101,6 @@ export const loginValidationSchema: yup.ObjectSchema<LoginCredentials> = yup.obj
 });
 
 export const registerValidationSchema: yup.ObjectSchema<RegisterCredentials> = yup.object({
-  name: yup
-    .string()
-    .min(2, 'El nombre debe tener al menos 2 caracteres')
-    .required('El nombre es requerido'),
   username: yup
     .string()
     .min(3, 'El usuario debe tener al menos 3 caracteres')

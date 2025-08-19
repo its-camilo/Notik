@@ -35,7 +35,6 @@ export const RegisterForm = React.memo<AuthFormProps>(({
   const { register } = useAuth();
 
   const initialValues: RegisterCredentials = {
-    name: '',
     username: '',
     email: '',
     password: '',
@@ -188,16 +187,6 @@ export const RegisterForm = React.memo<AuthFormProps>(({
             </View>
 
             <View style={styles.form}>
-              <FormField
-                label="Nombre"
-                value={values.name}
-                onChangeText={(value) => handleInputChange('name', value)}
-                placeholder="Tu nombre completo"
-                icon="person"
-                error={errors.name}
-                autoCapitalize="words"
-                isDark={isDark}
-              />
 
               <FormField
                 label="Usuario"

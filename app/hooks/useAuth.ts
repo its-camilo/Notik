@@ -97,7 +97,6 @@ export const useAuth = () => {
         username: data.username,
         email: data.email,
         password: data.password,
-        name: data.name,
       };
 
       const authData = await authRegister(registerData);
