@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,13 @@ import {
   ScrollView,
   SafeAreaView,
   StatusBar,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { createFormStyles } from '@/styles/formStyles';
 import { palette } from '@/styles/design-tokens';
 import { useFormValidation, registerValidationSchema } from '@/hooks/useFormValidation';
+import { useAuth } from '@/hooks/useAuth';
 import { FormField } from './FormField';
 import { AuthHeader } from './AuthHeader';
 import { AuthToggle } from './AuthToggle';
@@ -21,12 +24,16 @@ import type { AuthFormProps, RegisterCredentials } from '@/types/auth';
 
 /**
  * Register form component with validation and modern React patterns
+ * Now integrated with Strapi authentication
  */
 export const RegisterForm = React.memo<AuthFormProps>(({
   onSwitchMode,
   isDark,
   onToggleTheme,
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { register } = useAuth();
+
   const initialValues: RegisterCredentials = {
     name: '',
     username: '',
@@ -101,7 +108,9 @@ export const RegisterForm = React.memo<AuthFormProps>(({
     const handler = (e: WheelEvent) => {
       const el = document.getElementById(scrollId);
       if (!el) return;
+      // forward scroll amount to the form and prevent default page scroll
       el.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' } as any);
+      // prevent page from handling the wheel
       e.preventDefault();
     };
 
@@ -115,11 +124,32 @@ export const RegisterForm = React.memo<AuthFormProps>(({
 
   const handleRegister = useCallback(async () => {
     const validation = await validateForm();
-    if (validation.isValid) {
-      // TODO: Implement actual registration logic
-      console.log('Register with:', values);
+
+    // Permitimos intentar aunque la validación local falle
+    if (!validation.isValid) {
+      const msg = 'Campos inválidos localmente — intentando de todos modos.';
+      if (Platform.OS === 'web') {
+        alert(msg);
+      } else {
+        Alert.alert('Validación', msg);
+      }
     }
-  }, [validateForm, values]);
+
+    setIsSubmitting(true);
+    try {
+      await register(values);
+      // El hook useAuth maneja la navegación automáticamente
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error en el registro';
+      if (Platform.OS === 'web') {
+        alert(errorMessage);
+      } else {
+        Alert.alert('Error de Registro', errorMessage);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [validateForm, values, register]);
 
   const handleSwitchToLogin = useCallback(() => {
     onSwitchMode();
@@ -218,11 +248,19 @@ export const RegisterForm = React.memo<AuthFormProps>(({
                 style={styles.registerButton}
                 onPress={handleRegister}
                 activeOpacity={0.8}
+                disabled={isSubmitting}
                 accessibilityRole="button"
                 accessibilityLabel="Crear cuenta"
                 accessibilityHint="Toca para crear tu nueva cuenta"
               >
-                <Text style={styles.registerButtonText}>Crear Cuenta</Text>
+                {isSubmitting ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={isDark ? palette.text.light : palette.text.light}
+                  />
+                ) : (
+                  <Text style={styles.registerButtonText}>Crear Cuenta</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>

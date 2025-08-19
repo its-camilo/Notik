@@ -19,6 +19,26 @@ export interface RegisterCredentials {
   confirmPassword: string;
 }
 
+/**
+ * Estado de autenticación para el contexto global
+ */
+export interface AuthState {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  user: any | null;
+  error: string | null;
+}
+
+/**
+ * Acciones del contexto de autenticación
+ */
+export interface AuthContextValue extends AuthState {
+  login: (email: string, password: string) => Promise<void>;
+  register: (data: RegisterCredentials) => Promise<void>;
+  logout: () => Promise<void>;
+  checkAuth: () => Promise<void>;
+}
+
 export interface FormValidation {
   isValid: boolean;
   errors: Record<string, string>;

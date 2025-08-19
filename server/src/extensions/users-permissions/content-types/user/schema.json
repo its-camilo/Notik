@@ -67,8 +67,8 @@
       "configurable": false
     },
     "name": {
-      "type": "string",
-      "required": true
+      "type": "text",
+      "required": false
     }
   }
 }

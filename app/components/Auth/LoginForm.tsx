@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,13 @@ import {
   ScrollView,
   SafeAreaView,
   StatusBar,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { createFormStyles } from '@/styles/formStyles';
 import { palette } from '@/styles/design-tokens';
 import { useFormValidation, loginValidationSchema } from '@/hooks/useFormValidation';
+import { useAuth } from '@/hooks/useAuth';
 import { FormField } from './FormField';
 import { AuthHeader } from './AuthHeader';
 import { AuthToggle } from './AuthToggle';
@@ -21,12 +24,16 @@ import type { AuthFormProps, LoginCredentials } from '@/types/auth';
 
 /**
  * Login form component with validation and modern React patterns
+ * Now integrated with Strapi authentication
  */
 export const LoginForm = React.memo<AuthFormProps>(({
   onSwitchMode,
   isDark,
   onToggleTheme,
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { login } = useAuth();
+
   const initialValues: LoginCredentials = {
     email: '',
     password: '',
@@ -114,11 +121,34 @@ export const LoginForm = React.memo<AuthFormProps>(({
 
   const handleLogin = useCallback(async () => {
     const validation = await validateForm();
-    if (validation.isValid) {
-      // TODO: Implement actual login logic
-      console.log('Login with:', values);
+
+    // Permitimos intentar aunque la validación local falle
+    if (!validation.isValid) {
+      const msg = 'Campos inválidos localmente — intentando de todos modos.';
+      if (Platform.OS === 'web') {
+        // uso mínimo de alert para UX
+        // no mostramos token ni datos sensibles
+        alert(msg);
+      } else {
+        Alert.alert('Validación', msg);
+      }
     }
-  }, [validateForm, values]);
+
+    setIsSubmitting(true);
+    try {
+      await login(values.email, values.password);
+      // El hook useAuth maneja la navegación automáticamente
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Error en el login';
+      if (Platform.OS === 'web') {
+        alert(errorMessage);
+      } else {
+        Alert.alert('Error de Login', errorMessage);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [validateForm, values, login]);
 
   const handleSwitchToRegister = useCallback(() => {
     onSwitchMode();
@@ -184,11 +214,19 @@ export const LoginForm = React.memo<AuthFormProps>(({
                 style={styles.loginButton}
                 onPress={handleLogin}
                 activeOpacity={0.8}
+                disabled={isSubmitting}
                 accessibilityRole="button"
                 accessibilityLabel="Iniciar sesión"
                 accessibilityHint="Toca para iniciar sesión con tus credenciales"
               >
-                <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+                {isSubmitting ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={isDark ? palette.text.light : palette.text.light}
+                  />
+                ) : (
+                  <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
