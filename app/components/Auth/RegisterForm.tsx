@@ -8,14 +8,14 @@ import {
   Platform,
   ScrollView,
   SafeAreaView,
-  StatusBar,
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { createFormStyles } from '@/styles/formStyles';
-import { palette } from '@/styles/design-tokens';
+import { palette, typography } from '@/styles/design-tokens';
 import { useFormValidation, registerValidationSchema } from '@/hooks/useFormValidation';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks';
 import { FormField } from './FormField';
 import { AuthHeader } from './AuthHeader';
 import { AuthToggle } from './AuthToggle';
@@ -24,7 +24,7 @@ import type { AuthFormProps, RegisterCredentials } from '@/types/auth';
 
 /**
  * Register form component with validation and modern React patterns
- * Now integrated with Strapi authentication
+ * Integrated with Strapi authentication
  */
 export const RegisterForm = React.memo<AuthFormProps>(({
   onSwitchMode,
@@ -34,12 +34,12 @@ export const RegisterForm = React.memo<AuthFormProps>(({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { register } = useAuth();
 
-  const initialValues: RegisterCredentials = {
+  const initialValues: RegisterCredentials = useMemo(() => ({
     username: '',
     email: '',
     password: '',
     confirmPassword: '',
-  };
+  }), []);
 
   const {
     values,
@@ -117,7 +117,7 @@ export const RegisterForm = React.memo<AuthFormProps>(({
     return () => window.removeEventListener('wheel', handler as EventListener);
   }, [scrollId]);
 
-  const handleInputChange = useCallback((field: string, value: string) => {
+  const handleInputChange = useCallback((field: keyof RegisterCredentials, value: string) => {
     setValue(field, value);
   }, [setValue]);
 
@@ -157,7 +157,7 @@ export const RegisterForm = React.memo<AuthFormProps>(({
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
-        barStyle={isDark ? 'light-content' : 'dark-content'}
+        style={isDark ? 'light' : 'dark'}
         backgroundColor={styles.container.backgroundColor}
       />
 

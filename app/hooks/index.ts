@@ -9,4 +9,4 @@ export { useKeepAlive } from './useKeepAlive';
 export { useThemeColor } from './useThemeColor';
 export { useAutoStart } from './useAutoStart';
 export { useWebTitle } from './useWebTitle';
-export { useAuth } from './useAuth';
+export { useAuth, AuthProvider } from './useAuth';

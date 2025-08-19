@@ -1,66 +1,57 @@
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { AuthResponse, User, LoginCredentials, RegisterCredentials } from '@/types/auth';
 
 /**
  * Servidor base de Strapi - constante global
  */
-export const SERVER_URL = 'https://supportive-fireworks-d01261f76f.strapiapp.com';
+export const SERVER_URL = 'https://supportive-fireworks-d01261f76f.strapiapp.com' as const;
 
 /**
  * Key para el token de autenticación
  */
-const AUTH_TOKEN_KEY = 'authToken';
+const AUTH_TOKEN_KEY = 'authToken' as const;
 
 /**
  * Interfaz para la respuesta de autenticación de Strapi
  */
 export interface StrapiAuthResponse {
-  jwt: string;
-  user: {
-    id: number;
-    username: string;
-    email: string;
-    name?: string;
-    provider: string;
-    confirmed: boolean;
-    blocked: boolean;
-    createdAt: string;
-    updatedAt: string;
+  readonly jwt: string;
+  readonly user: {
+    readonly id: number;
+    readonly username: string;
+    readonly email: string;
+    readonly name?: string;
+    readonly provider: string;
+    readonly confirmed: boolean;
+    readonly blocked: boolean;
+    readonly createdAt: string;
+    readonly updatedAt: string;
   };
 }
 
 /**
- * Interfaz para datos de registro
+ * Interfaz para datos de registro (internal API format)
  */
 export interface RegisterData {
-  username: string;
-  email: string;
-  password: string;
+  readonly username: string;
+  readonly email: string;
+  readonly password: string;
 }
 
 /**
- * Interfaz para credenciales de login (solo email + password a nivel público)
- * El campo "identifier" que requiere Strapi se construye internamente.
+ * Transform Strapi response to app User type
  */
-export interface LoginCredentials {
-  email: string;
-  password: string;
-}
-
-/**
- * Interfaz para el usuario actual
- */
-export interface CurrentUser {
-  id: number;
-  username: string;
-  email: string;
-  name?: string;
-  provider: string;
-  confirmed: boolean;
-  blocked: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
+const transformStrapiUser = (strapiUser: StrapiAuthResponse['user']): User => ({
+  id: strapiUser.id,
+  username: strapiUser.username,
+  email: strapiUser.email,
+  provider: strapiUser.provider,
+  confirmed: strapiUser.confirmed,
+  blocked: strapiUser.blocked,
+  createdAt: strapiUser.createdAt,
+  updatedAt: strapiUser.updatedAt,
+});
 
 /**
  * Wrapper para el storage que funciona tanto en web como React Native
@@ -88,7 +79,7 @@ const storage = {
     }
     return AsyncStorage.removeItem(key);
   },
-};
+} as const;
 
 /**
  * Helper para obtener el token del storage
@@ -127,7 +118,7 @@ export const removeToken = async (): Promise<void> => {
 /**
  * Función para registrar un nuevo usuario en Strapi
  */
-export const register = async (data: RegisterData): Promise<StrapiAuthResponse> => {
+export const register = async (data: RegisterData): Promise<AuthResponse> => {
   try {
     const response = await fetch(`${SERVER_URL}/api/auth/local/register`, {
       method: 'POST',
@@ -147,7 +138,11 @@ export const register = async (data: RegisterData): Promise<StrapiAuthResponse> 
     // Guardar el token automáticamente
     await setToken(authData.jwt);
 
-    return authData;
+    // Return properly typed response
+    return {
+      jwt: authData.jwt,
+      user: transformStrapiUser(authData.user),
+    };
   } catch (error) {
     console.error('Error en registro:', error);
     throw error;
@@ -157,7 +152,7 @@ export const register = async (data: RegisterData): Promise<StrapiAuthResponse> 
 /**
  * Función para hacer login en Strapi
  */
-export const login = async (credentials: LoginCredentials): Promise<StrapiAuthResponse> => {
+export const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
   try {
     // Strapi exige el campo "identifier"; usamos el email directamente.
     const payload = { identifier: credentials.email, password: credentials.password };
@@ -179,7 +174,11 @@ export const login = async (credentials: LoginCredentials): Promise<StrapiAuthRe
     // Guardar el token automáticamente
     await setToken(authData.jwt);
 
-    return authData;
+    // Return properly typed response
+    return {
+      jwt: authData.jwt,
+      user: transformStrapiUser(authData.user),
+    };
   } catch (error) {
     console.error('Error en login:', error);
     throw error;
@@ -201,7 +200,7 @@ export const logout = async (): Promise<void> => {
  * Función para obtener el usuario actual desde Strapi
  * Usa la validación canónica del servidor
  */
-export const getCurrentUser = async (): Promise<CurrentUser | null> => {
+export const getCurrentUser = async (): Promise<User | null> => {
   try {
     const token = await getToken();
 
@@ -225,8 +224,8 @@ export const getCurrentUser = async (): Promise<CurrentUser | null> => {
       return null;
     }
 
-    const userData: CurrentUser = await response.json();
-    return userData;
+    const userData = await response.json();
+    return transformStrapiUser(userData);
   } catch (error) {
     console.error('Error obteniendo usuario actual:', error);
     return null;

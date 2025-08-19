@@ -1,41 +1,78 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import * as yup from 'yup';
 import type { LoginCredentials, RegisterCredentials, FormValidation } from '@/types/auth';
 
 /**
+ * Hook state interface for type safety
+ */
+interface FormState<T> {
+  values: T;
+  errors: Record<string, string>;
+  touched: Record<string, boolean>;
+}
+
+/**
+ * Return type for the useFormValidation hook
+ */
+interface UseFormValidationReturn<T> {
+  values: T;
+  errors: Record<string, string>;
+  touched: Record<string, boolean>;
+  isFormValid: boolean;
+  setValue: (field: keyof T, value: T[keyof T]) => void;
+  validateField: (field: keyof T, value: T[keyof T]) => Promise<boolean>;
+  validateForm: () => Promise<FormValidation>;
+  resetForm: () => void;
+}
+
+/**
  * Custom hook for form validation using Yup schemas
+ * Implements optimized validation with proper TypeScript support
  */
 export function useFormValidation<T extends Record<string, any>>(
   initialValues: T,
   validationSchema: yup.ObjectSchema<T>
-) {
-  const [values, setValues] = useState<T>(initialValues);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
+): UseFormValidationReturn<T> {
+  const [state, setState] = useState<FormState<T>>({
+    values: initialValues,
+    errors: {},
+    touched: {},
+  });
+
+  // Use ref to store the validation schema to avoid unnecessary re-renders
+  const schemaRef = useRef(validationSchema);
+  schemaRef.current = validationSchema;
 
   const validateField = useCallback(
-    async (field: string, value: any) => {
+    async (field: keyof T, value: T[keyof T]): Promise<boolean> => {
       try {
         // Validate single field by creating a partial object
         const partialValues = { [field]: value } as Partial<T>;
-        await validationSchema.validateAt(field, partialValues);
-        setErrors(prev => ({ ...prev, [field]: '' }));
+        await schemaRef.current.validateAt(field as string, partialValues);
+
+        setState(prev => ({
+          ...prev,
+          errors: { ...prev.errors, [field]: '' }
+        }));
         return true;
       } catch (error) {
         if (error instanceof yup.ValidationError) {
-          setErrors(prev => ({ ...prev, [field]: error.message }));
+          setState(prev => ({
+            ...prev,
+            errors: { ...prev.errors, [field]: error.message }
+          }));
           return false;
         }
         return false;
       }
     },
-    [validationSchema]
+    []
   );
 
   const validateForm = useCallback(async (): Promise<FormValidation> => {
     try {
-      await validationSchema.validate(values, { abortEarly: false });
-      setErrors({});
+      await schemaRef.current.validate(state.values, { abortEarly: false });
+      setState(prev => ({ ...prev, errors: {} }));
       return { isValid: true, errors: {} };
     } catch (error) {
       if (error instanceof yup.ValidationError) {
@@ -45,17 +82,20 @@ export function useFormValidation<T extends Record<string, any>>(
             newErrors[err.path] = err.message;
           }
         });
-        setErrors(newErrors);
+        setState(prev => ({ ...prev, errors: newErrors }));
         return { isValid: false, errors: newErrors };
       }
       return { isValid: false, errors: {} };
     }
-  }, [values, validationSchema]);
+  }, [state.values]);
 
   const setValue = useCallback(
-    (field: string, value: any) => {
-      setValues(prev => ({ ...prev, [field]: value }));
-      setTouched(prev => ({ ...prev, [field]: true }));
+    (field: keyof T, value: T[keyof T]) => {
+      setState(prev => ({
+        ...prev,
+        values: { ...prev.values, [field]: value },
+        touched: { ...prev.touched, [field]: true }
+      }));
 
       // Validate on every change (validate-on-change)
       // fire-and-forget async validation so UI updates errors when available
@@ -65,19 +105,23 @@ export function useFormValidation<T extends Record<string, any>>(
   );
 
   const resetForm = useCallback(() => {
-    setValues(initialValues);
-    setErrors({});
-    setTouched({});
+    setState({
+      values: initialValues,
+      errors: {},
+      touched: {},
+    });
   }, [initialValues]);
 
   const isFormValid = useMemo(() => {
-    return Object.keys(errors).length === 0 && Object.keys(touched).length > 0;
-  }, [errors, touched]);
+    const hasErrors = Object.values(state.errors).some(error => error !== '');
+    const hasTouchedFields = Object.keys(state.touched).length > 0;
+    return !hasErrors && hasTouchedFields;
+  }, [state.errors, state.touched]);
 
   return {
-    values,
-    errors,
-    touched,
+    values: state.values,
+    errors: state.errors,
+    touched: state.touched,
     isFormValid,
     setValue,
     validateField,

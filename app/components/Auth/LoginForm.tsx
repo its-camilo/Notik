@@ -8,14 +8,14 @@ import {
   Platform,
   ScrollView,
   SafeAreaView,
-  StatusBar,
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { createFormStyles } from '@/styles/formStyles';
-import { palette } from '@/styles/design-tokens';
+import { palette, typography, animation } from '@/styles/design-tokens';
 import { useFormValidation, loginValidationSchema } from '@/hooks/useFormValidation';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks';
 import { FormField } from './FormField';
 import { AuthHeader } from './AuthHeader';
 import { AuthToggle } from './AuthToggle';
@@ -24,7 +24,7 @@ import type { AuthFormProps, LoginCredentials } from '@/types/auth';
 
 /**
  * Login form component with validation and modern React patterns
- * Now integrated with Strapi authentication
+ * Integrated with Strapi authentication
  */
 export const LoginForm = React.memo<AuthFormProps>(({
   onSwitchMode,
@@ -34,10 +34,10 @@ export const LoginForm = React.memo<AuthFormProps>(({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
 
-  const initialValues: LoginCredentials = {
+  const initialValues: LoginCredentials = useMemo(() => ({
     email: '',
     password: '',
-  };
+  }), []);
 
   const {
     values,
@@ -49,7 +49,7 @@ export const LoginForm = React.memo<AuthFormProps>(({
 
   const baseStyles = createFormStyles(isDark);
 
-  const styles = StyleSheet.create({
+  const styles = useMemo(() => StyleSheet.create({
     container: {
       ...baseStyles.screen,
       alignItems: 'center',
@@ -77,13 +77,13 @@ export const LoginForm = React.memo<AuthFormProps>(({
       marginBottom: 24,
     },
     title: {
-      fontSize: 24,
-      fontWeight: '700',
+      fontSize: typography.fontSize.xxl,
+      fontWeight: typography.fontWeight.bold,
       color: isDark ? palette.text.dark : palette.text.light,
       marginBottom: 8,
     },
     subtitle: {
-      fontSize: 14,
+      fontSize: typography.fontSize.sm,
       color: isDark ? palette.text.secondaryDark : '#6B7280',
       lineHeight: 20,
     },
@@ -94,7 +94,10 @@ export const LoginForm = React.memo<AuthFormProps>(({
       ...baseStyles.ctaButton,
     },
     loginButtonText: baseStyles.ctaButtonText,
-  });
+    loadingIndicator: {
+      marginRight: 8,
+    },
+  }), [isDark, baseStyles]);
 
   // Wheel-to-scroll behavior on web: forward global wheel events to the form's ScrollView
   const scrollId = useMemo(() => 'auth-scroll-login', []);
@@ -115,7 +118,7 @@ export const LoginForm = React.memo<AuthFormProps>(({
     return () => window.removeEventListener('wheel', handler as EventListener);
   }, [scrollId]);
 
-  const handleInputChange = useCallback((field: string, value: string) => {
+  const handleInputChange = useCallback((field: keyof LoginCredentials, value: string) => {
     setValue(field, value);
   }, [setValue]);
 
@@ -157,7 +160,7 @@ export const LoginForm = React.memo<AuthFormProps>(({
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar
-        barStyle={isDark ? 'light-content' : 'dark-content'}
+        style={isDark ? 'light' : 'dark'}
         backgroundColor={styles.container.backgroundColor}
       />
 

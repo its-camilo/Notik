@@ -1,9 +1,10 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   StyleSheet,
+  Platform,
   type TextInputProps,
 } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -26,6 +27,41 @@ export const FormField = memo<FormFieldProps>(({
   isDark,
 }) => {
   const baseStyles = createFormStyles(isDark);
+
+  // When this field is a password (secureTextEntry), we briefly show the
+  // entered text on each change and then re-enable masking. This creates
+  // the common UX where the last-typed characters are visible for a
+  // short moment before turning into bullets.
+  const [masked, setMasked] = useState<boolean>(secureTextEntry);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // sync when prop changes from parent
+  useEffect(() => {
+    setMasked(secureTextEntry);
+  }, [secureTextEntry]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
+  const handleChangeText = useCallback((text: string) => {
+    onChangeText?.(text);
+
+    // Avoid toggling secureTextEntry on web because it breaks composition
+    // and can result in reversed characters in some browsers. Only
+    // briefly reveal on native platforms (iOS/Android).
+    if (!secureTextEntry || Platform.OS === 'web') return;
+
+    // reveal for a short moment on native
+    setMasked(false);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setMasked(true);
+      timeoutRef.current = null;
+    }, 700);
+  }, [onChangeText, secureTextEntry]);
 
   const styles = StyleSheet.create({
     inputGroup: {
@@ -63,8 +99,8 @@ export const FormField = memo<FormFieldProps>(({
           placeholder={placeholder}
           placeholderTextColor={placeholderColor}
           value={value}
-          onChangeText={onChangeText}
-          secureTextEntry={secureTextEntry}
+          onChangeText={handleChangeText}
+          secureTextEntry={secureTextEntry ? masked : false}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
           accessibilityLabel={label}
