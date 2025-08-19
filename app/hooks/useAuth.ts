@@ -64,7 +64,7 @@ export const useAuth = () => {
       setAuthState(prev => ({ ...prev, isLoading: true, error: null }));
 
       const authData = await authLogin({
-        identifier: email, // Strapi acepta email como identifier
+        email,
         password,
       });
 

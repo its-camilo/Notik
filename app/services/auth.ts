@@ -40,10 +40,11 @@ export interface RegisterData {
 }
 
 /**
- * Interfaz para credenciales de login
+ * Interfaz para credenciales de login (solo email + password a nivel público)
+ * El campo "identifier" que requiere Strapi se construye internamente.
  */
 export interface LoginCredentials {
-  identifier: string; // email o username
+  email: string;
   password: string;
 }
 
@@ -159,12 +160,14 @@ export const register = async (data: RegisterData): Promise<StrapiAuthResponse> 
  */
 export const login = async (credentials: LoginCredentials): Promise<StrapiAuthResponse> => {
   try {
+    // Strapi exige el campo "identifier"; usamos el email directamente.
+    const payload = { identifier: credentials.email, password: credentials.password };
     const response = await fetch(`${SERVER_URL}/api/auth/local`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(credentials),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
