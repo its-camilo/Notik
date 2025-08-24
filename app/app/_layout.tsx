@@ -4,6 +4,8 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import '../styles/globals.css';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from '@/components/ui/ToastConfig';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useWebTitle } from '@/hooks/useWebTitle';
@@ -28,6 +30,7 @@ export default function RootLayout() {
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
+      <Toast config={toastConfig} />
     </ThemeProvider>
   );
 }

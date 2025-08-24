@@ -75,8 +75,8 @@ const createMainScreenStyles = (isDark: boolean) => StyleSheet.create({
     gap: spacing.sm,
   },
   tabItemActive: {
-    backgroundColor: isDark ? '#333' : '#444',
-    borderColor: isDark ? '#333' : '#444',
+    backgroundColor: isDark ? '#333' : palette.brand.brown,
+    borderColor: isDark ? '#333' : palette.brand.brown,
   },
   tabItemText: {
     fontSize: 14,
@@ -84,7 +84,7 @@ const createMainScreenStyles = (isDark: boolean) => StyleSheet.create({
     color: isDark ? palette.text.dark : '#222',
   },
   tabItemTextActive: {
-    color: '#FFF',
+    color: isDark ? '#FFF' : '#FFFFFF',
   },
   addTabButton: {
     marginTop: spacing.sm,
@@ -244,7 +244,7 @@ export const MainScreen = React.memo(() => {
             </View>
 
             <View style={[styles.tabItem, styles.tabItemActive]}>
-              <MaterialIcons name="folder" size={16} color={isDark ? '#DADADA' : '#FFFFFF'} />
+              <MaterialIcons name="folder" size={16} color={'#FFFFFF'} />
               <Text style={[styles.tabItemText, styles.tabItemTextActive]}>Dashboard</Text>
             </View>
           </View>
