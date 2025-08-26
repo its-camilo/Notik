@@ -1,21 +1,25 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-import '../styles/globals.css';
-import Toast from 'react-native-toast-message';
-import { toastConfig } from '@/components/ui/ToastConfig';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import "react-native-reanimated";
+import "../styles/globals.css";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "@/components/ui/ToastConfig";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { useWebTitle } from '@/hooks/useWebTitle';
+import { useColorScheme } from "@/hooks/useColorScheme";
+import { useWebTitle } from "@/hooks/useWebTitle";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   useWebTitle(); // Ensure web title is always "Notik"
 
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   if (!loaded) {
@@ -24,9 +28,10 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="home" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

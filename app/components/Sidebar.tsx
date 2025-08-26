@@ -16,6 +16,7 @@ import {
   Easing,
 } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useRouter } from "expo-router";
 import { useAuth } from "@/hooks";
 import { useBreakpoint } from "@/hooks/useBreakpoint";
 import { palette, spacing, radius } from "@/styles/design-tokens";
@@ -237,6 +238,7 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
 export const Sidebar = React.memo<SidebarProps>(
   ({ onSidebarVisibilityChange, onThemeToggle, isDark }) => {
     const { user, logout } = useAuth();
+    const router = useRouter();
     // Ya no necesitamos useTheme aquí porque recibimos isDark como prop
     const { isMobile, isDesktop } = useBreakpoint();
 
@@ -257,9 +259,16 @@ export const Sidebar = React.memo<SidebarProps>(
       });
     }, [onSidebarVisibilityChange]);
 
-    const handleLogout = useCallback(() => {
-      logout();
-    }, [logout]);
+    const handleLogout = useCallback(async () => {
+      try {
+        await logout();
+        router.replace("/");
+      } catch (error) {
+        console.error("Error during logout:", error);
+        // Even if logout fails, redirect to auth page
+        router.replace("/");
+      }
+    }, [logout, router]);
 
     const handleThemeToggle = useCallback(() => {
       onThemeToggle?.();

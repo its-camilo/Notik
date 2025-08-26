@@ -1,26 +1,21 @@
-import React, { useMemo, useEffect } from "react";
+import React, { useEffect } from "react";
 import { View, ActivityIndicator, Text } from "react-native";
 import { useRouter } from "expo-router";
-import { AuthScreen } from "@/src/screens/AuthScreen";
+import { MainScreen } from "@/src/screens/MainScreen";
 import { useAuth, AuthProvider } from "@/hooks";
 
 /**
- * Auth route (/) - Shows login/register screen
- * Redirects to /home when user is authenticated
+ * Home route (/home) - Protected route that shows MainScreen
+ * Redirects to / if user is not authenticated
  */
-function InnerApp() {
+function InnerHome() {
   const { isAuthenticated, isLoading, error } = useAuth();
   const router = useRouter();
 
-  const containerStyle = useMemo(
-    () => ({ flex: 1, backgroundColor: "#fff" }),
-    []
-  );
-
-  // Redirect to home when authenticated
+  // Redirect to auth page if not authenticated
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      router.replace("/home");
+    if (!isAuthenticated && !isLoading) {
+      router.replace("/");
     }
   }, [isAuthenticated, isLoading, router]);
 
@@ -37,7 +32,7 @@ function InnerApp() {
       >
         <ActivityIndicator size="large" color="#007AFF" />
         <Text style={{ marginTop: 10, color: "#666" }}>
-          Verificando autenticación...
+          Cargando aplicación...
         </Text>
       </View>
     );
@@ -65,11 +60,11 @@ function InnerApp() {
     );
   }
 
-  // Only show AuthScreen if not authenticated
-  if (!isAuthenticated) {
+  // Only show MainScreen if authenticated
+  if (isAuthenticated) {
     return (
-      <View style={containerStyle}>
-        <AuthScreen />
+      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <MainScreen />
       </View>
     );
   }
@@ -78,10 +73,10 @@ function InnerApp() {
   return null;
 }
 
-export default function AuthPage() {
+export default function HomePage() {
   return (
     <AuthProvider>
-      <InnerApp />
+      <InnerHome />
     </AuthProvider>
   );
 }
