@@ -61,7 +61,7 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
     },
     hamburgerButton: {
       position: "absolute",
-      top: spacing.lg,
+      top: spacing.sm, // Cambiado de spacing.lg a spacing.sm para subirlo
       left: spacing.lg,
       width: 44,
       height: 44,
@@ -82,11 +82,11 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
     },
     hamburgerButtonClose: {
       position: "absolute",
-      top: 2,
-      left: 2,
-      width: 21,
-      height: 21,
-      borderRadius: 3,
+      top: spacing.xs, // Más pegado arriba
+      right: spacing.xs, // Pegado a la derecha en lugar de izquierda
+      width: 32, // Más pequeño
+      height: 32, // Más pequeño
+      borderRadius: 8, // Radio más pequeño
       backgroundColor: isDark
         ? palette.surface.darkAlt
         : palette.surface.lightAlt,
@@ -425,7 +425,7 @@ export const Sidebar = React.memo<SidebarProps>(
           >
             <MaterialIcons
               name={sidebarVisible ? "close" : "menu"}
-              size={sidebarVisible ? 11 : 20}
+              size={sidebarVisible ? 16 : 20} // Icono de cierre un poco más grande pero aún pequeño
               color={isDark ? palette.text.dark : palette.text.light}
             />
           </TouchableOpacity>

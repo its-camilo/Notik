@@ -4,6 +4,7 @@
 
 // Main components
 export { Sidebar, SIDEBAR_WIDTH } from "./Sidebar";
+export { TopBar, TOPBAR_HEIGHT } from "./TopBar";
 export { Collapsible } from "./Collapsible";
 export { ExternalLink } from "./ExternalLink";
 export { HapticTab } from "./HapticTab";
