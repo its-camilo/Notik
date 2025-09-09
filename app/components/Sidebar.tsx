@@ -33,6 +33,9 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
   StyleSheet.create({
     sidebar: {
       width: isMobile ? "100%" : SIDEBAR_WIDTH,
+      height: "100%", // Altura completa tanto en móvil como desktop
+      flex: 1,
+      flexDirection: "column" as const,
       paddingHorizontal: spacing.lg,
       paddingTop: spacing.xl,
       paddingBottom: spacing.xl,
@@ -47,7 +50,7 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
         left: 0,
         right: 0,
         bottom: 0,
-        zIndex: 1000,
+        zIndex: 9999, // Muy alto para asegurar que esté encima de todo en móvil
       }),
     },
     sidebarOverlay: {
@@ -82,11 +85,11 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
     },
     hamburgerButtonClose: {
       position: "absolute",
-      top: spacing.xs, // Más pegado arriba
-      right: spacing.xs, // Pegado a la derecha en lugar de izquierda
-      width: 32, // Más pequeño
-      height: 32, // Más pequeño
-      borderRadius: 8, // Radio más pequeño
+      top: spacing.lg, // Respetar área segura visual
+      right: spacing.lg, // Separado del borde
+      width: 36,
+      height: 36,
+      borderRadius: 10,
       backgroundColor: isDark
         ? palette.surface.darkAlt
         : palette.surface.lightAlt,
@@ -94,7 +97,7 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
       borderColor: isDark ? "#262626" : palette.surface.border,
       alignItems: "center",
       justifyContent: "center",
-      zIndex: 1001,
+      zIndex: 2000, // Asegurar sobre overlay y contenido
       elevation: 4,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
@@ -361,7 +364,7 @@ export const Sidebar = React.memo<SidebarProps>(
           </View>
         </View>
 
-        <View>
+        <View style={{ flex: 1 }}>
           <Text style={styles.sectionLabel}></Text>
           <Text style={styles.sectionLabel}>Pestañas</Text>
           <View style={styles.tabsContainer}>
@@ -411,21 +414,17 @@ export const Sidebar = React.memo<SidebarProps>(
 
     return (
       <>
-        {/* Mobile hamburger button */}
-        {isMobile && (
+        {/* Mobile hamburger/menu button (only when sidebar is hidden) */}
+        {isMobile && !sidebarVisible && (
           <TouchableOpacity
             onPress={toggleSidebar}
             activeOpacity={0.8}
-            style={
-              sidebarVisible
-                ? styles.hamburgerButtonClose
-                : styles.hamburgerButton
-            }
-            accessibilityLabel={sidebarVisible ? "Cerrar menú" : "Abrir menú"}
+            style={styles.hamburgerButton}
+            accessibilityLabel="Abrir menú"
           >
             <MaterialIcons
-              name={sidebarVisible ? "close" : "menu"}
-              size={sidebarVisible ? 16 : 20} // Icono de cierre un poco más grande pero aún pequeño
+              name="menu"
+              size={20}
               color={isDark ? palette.text.dark : palette.text.light}
             />
           </TouchableOpacity>
@@ -443,6 +442,20 @@ export const Sidebar = React.memo<SidebarProps>(
               activeOpacity={1}
             />
             {renderSidebar()}
+            {/* Close (X) button fixed at top-right while sidebar is open */}
+            <TouchableOpacity
+              onPress={toggleSidebar}
+              activeOpacity={0.8}
+              style={styles.hamburgerButtonClose}
+              accessibilityLabel="Cerrar menú"
+              hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+            >
+              <MaterialIcons
+                name="close"
+                size={18}
+                color={"#FFFFFF"}
+              />
+            </TouchableOpacity>
           </>
         )}
 

@@ -32,7 +32,7 @@ const createTopBarStyles = (
       borderBottomWidth: 1,
       borderBottomColor: isDark ? "#262626" : palette.surface.border,
       zIndex: 50, // Siempre menor que sidebar
-      // Siempre ocupar todo el ancho disponible
+      // Siempre ocupar todo el ancho del contenedor padre
       position: "relative" as const,
       width: "100%",
     },
