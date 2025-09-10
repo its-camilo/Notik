@@ -85,11 +85,19 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
     },
     hamburgerButtonClose: {
       position: "absolute",
+<<<<<<< HEAD
       top: spacing.xs, // Aún más pegado a la esquina
       right: spacing.xs, // Aún más pegado a la esquina
       width: 30,
       height: 30,
       borderRadius: 7,
+=======
+      top: spacing.lg, // Respetar área segura visual
+      right: spacing.lg, // Separado del borde
+      width: 36,
+      height: 36,
+      borderRadius: 10,
+>>>>>>> c292675e151e794c04fa3a7ddaa224a01cbf83fe
       backgroundColor: isDark
         ? palette.surface.darkBase
         : palette.surface.light,
@@ -97,7 +105,11 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
       borderColor: isDark ? "#404040" : palette.surface.border,
       alignItems: "center",
       justifyContent: "center",
+<<<<<<< HEAD
       zIndex: 10001, // Debe estar por encima del sidebar (9999)
+=======
+      zIndex: 2000, // Asegurar sobre overlay y contenido
+>>>>>>> c292675e151e794c04fa3a7ddaa224a01cbf83fe
       elevation: 4,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
@@ -452,8 +464,13 @@ export const Sidebar = React.memo<SidebarProps>(
             >
               <MaterialIcons
                 name="close"
+<<<<<<< HEAD
                 size={15}
                 color={isDark ? palette.text.dark : palette.text.light}
+=======
+                size={18}
+                color={"#FFFFFF"}
+>>>>>>> c292675e151e794c04fa3a7ddaa224a01cbf83fe
               />
             </TouchableOpacity>
           </>
