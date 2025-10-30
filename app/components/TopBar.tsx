@@ -30,7 +30,7 @@ const createTopBarStyles = (
     container: {
       backgroundColor: isDark ? palette.surface.dark : palette.surface.light,
       borderBottomWidth: 1,
-      borderBottomColor: isDark ? "#262626" : palette.surface.border,
+      borderBottomColor: isDark ? palette.neutral[900] : palette.surface.border,
       zIndex: 50, // Siempre menor que sidebar
       // Siempre ocupar todo el ancho del contenedor padre
       position: "relative" as const,
@@ -64,13 +64,13 @@ const createTopBarStyles = (
       paddingHorizontal: isMobile ? spacing.sm : spacing.md, // Más padding en PC
       borderRadius: isMobile ? radius.sm : radius.md, // Más radius en PC
       // Usar los mismos colores que el Dashboard activo en la sidebar
-      backgroundColor: isDark ? "#333" : palette.brand.brown,
+      backgroundColor: isDark ? palette.neutral[850] : palette.brand.brown,
     },
     addButtonText: {
       fontSize: isMobile ? typography.fontSize.xs : typography.fontSize.sm, // Más grande en PC
       fontWeight: typography.fontWeight.medium as any,
       // Usar los mismos colores de texto que el Dashboard activo
-      color: isDark ? "#FFF" : "#FFFFFF",
+      color: palette.pure.white,
     },
   });
 };
@@ -92,7 +92,7 @@ export const TopBar = React.memo<TopBarProps>(
 
     const iconColor = isDark ? palette.text.dark : palette.text.light;
     // Usar los mismos colores de texto que el Dashboard activo para el ícono
-    const addTextColor = isDark ? "#FFF" : "#FFFFFF";
+    const addTextColor = palette.pure.white;
 
     const handleChatPress = () => {
       onChatPress?.();

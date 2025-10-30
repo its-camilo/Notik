@@ -33,7 +33,7 @@ export const AuthHeader = memo<AuthHeaderProps>(({ isDark }) => {
     },
     subtitle: {
       fontSize: 16,
-      color: isDark ? palette.text.secondaryDark : '#6B7280',
+      color: isDark ? palette.text.secondaryDark : palette.text.placeholderDark,
       textAlign: 'center',
       lineHeight: 22,
     },

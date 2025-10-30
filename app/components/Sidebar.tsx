@@ -41,7 +41,7 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
       paddingBottom: spacing.xl,
       backgroundColor: isDark ? palette.surface.dark : palette.surface.light,
       borderRightWidth: isMobile ? 0 : 1,
-      borderRightColor: isDark ? "#262626" : palette.surface.border,
+      borderRightColor: isDark ? palette.neutral[900] : palette.surface.border,
       borderTopRightRadius: isMobile ? 0 : radius.xl,
       borderBottomRightRadius: isMobile ? 0 : radius.xl,
       ...(isMobile && {
@@ -59,7 +59,7 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
       left: 0,
       right: 0,
       bottom: 0,
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      backgroundColor: palette.overlay.dark,
       zIndex: 999,
     },
     hamburgerButton: {
@@ -73,7 +73,7 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
         ? palette.surface.darkAlt
         : palette.surface.lightAlt,
       borderWidth: 1,
-      borderColor: isDark ? "#262626" : palette.surface.border,
+      borderColor: isDark ? palette.neutral[900] : palette.surface.border,
       alignItems: "center",
       justifyContent: "center",
       zIndex: 1001,
@@ -94,7 +94,7 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
         ? palette.surface.darkBase
         : palette.surface.light,
       borderWidth: 1,
-      borderColor: isDark ? "#404040" : palette.surface.border,
+      borderColor: isDark ? palette.neutral[800] : palette.surface.border,
       alignItems: "center",
       justifyContent: "center",
       zIndex: 10001, // Debe estar por encima del sidebar (9999)
@@ -154,20 +154,20 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
         ? palette.surface.darkAlt
         : palette.surface.lightAlt,
       borderWidth: 1,
-      borderColor: isDark ? "#262626" : palette.surface.borderAlt,
+      borderColor: isDark ? palette.neutral[900] : palette.surface.borderAlt,
       gap: spacing.sm,
     },
     tabItemActive: {
-      backgroundColor: isDark ? "#333" : palette.brand.brown,
-      borderColor: isDark ? "#333" : palette.brand.brown,
+      backgroundColor: isDark ? palette.neutral[850] : palette.brand.brown,
+      borderColor: isDark ? palette.neutral[850] : palette.brand.brown,
     },
     tabItemText: {
       fontSize: 14,
       fontWeight: "600",
-      color: isDark ? palette.text.dark : "#222",
+      color: isDark ? palette.text.dark : palette.pure.blackSoft,
     },
     tabItemTextActive: {
-      color: isDark ? "#FFF" : "#FFFFFF",
+      color: palette.pure.white,
     },
     addTabButton: {
       marginTop: spacing.sm,
@@ -179,9 +179,9 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
       width: "100%",
       justifyContent: "space-between",
       borderRadius: radius.lg,
-      backgroundColor: isDark ? "#0F0F0F" : "#F3F3F3",
+      backgroundColor: isDark ? palette.surface.dark : palette.neutral[100],
       borderWidth: 1,
-      borderColor: isDark ? "#2B2B2B" : "#D1D1D1",
+      borderColor: isDark ? palette.neutral[925] : palette.neutral[300],
     },
     addTabInput: {
       flex: 1,
@@ -195,14 +195,14 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
       alignItems: "center",
       justifyContent: "center",
       borderWidth: 1,
-      borderColor: isDark ? "#2B2B2B" : "#D1D1D1",
-      backgroundColor: isDark ? "#262626" : "#F3F3F3",
+      borderColor: isDark ? palette.neutral[925] : palette.neutral[300],
+      backgroundColor: isDark ? palette.neutral[900] : palette.neutral[100],
     },
     footer: {
       marginTop: "auto",
       paddingTop: spacing.lg,
       borderTopWidth: 1,
-      borderTopColor: isDark ? "#262626" : palette.surface.border,
+      borderTopColor: isDark ? palette.neutral[900] : palette.surface.border,
     },
     username: {
       fontSize: 13,
@@ -227,7 +227,7 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
         ? palette.surface.darkBase
         : palette.surface.lightBase,
       borderWidth: 1,
-      borderColor: isDark ? "#262626" : palette.surface.border,
+      borderColor: isDark ? palette.neutral[900] : palette.surface.border,
       alignItems: "center",
       justifyContent: "center",
       elevation: 4,
@@ -373,10 +373,10 @@ export const Sidebar = React.memo<SidebarProps>(
                 value={newTabName}
                 onChangeText={handleNewTabChange}
                 placeholder="Nueva pestaña"
-                placeholderTextColor={isDark ? "#777" : "#888"}
+                placeholderTextColor={isDark ? palette.neutral[600] : palette.neutral[500]}
                 style={[
                   styles.addTabInput,
-                  { color: isDark ? "#DADADA" : "#222" },
+                  { color: isDark ? palette.neutral[150] : palette.pure.blackSoft },
                 ]}
                 accessibilityLabel="Nombre de nueva pestaña"
               />
@@ -389,14 +389,14 @@ export const Sidebar = React.memo<SidebarProps>(
                   <MaterialIcons
                     name="add"
                     size={16}
-                    color={isDark ? "#DADADA" : "#222"}
+                    color={isDark ? palette.neutral[150] : palette.pure.blackSoft}
                   />
                 </View>
               </TouchableOpacity>
             </View>
 
             <View style={[styles.tabItem, styles.tabItemActive]}>
-              <MaterialIcons name="folder" size={16} color={"#FFFFFF"} />
+              <MaterialIcons name="folder" size={16} color={palette.pure.white} />
               <Text style={[styles.tabItemText, styles.tabItemTextActive]}>
                 Dashboard
               </Text>
@@ -489,7 +489,7 @@ export const Sidebar = React.memo<SidebarProps>(
               <MaterialIcons
                 name={sidebarVisible ? "chevron-left" : "chevron-right"}
                 size={20}
-                color={isDark ? palette.text.light : "#111"}
+                color={isDark ? palette.text.light : palette.text.light}
               />
             </TouchableOpacity>
           </Animated.View>
