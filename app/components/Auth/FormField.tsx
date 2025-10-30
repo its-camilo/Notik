@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { createFormStyles } from '@/styles/formStyles';
+import { palette } from '@/styles/design-tokens';
 import type { FormFieldProps } from '@/types/auth';
 
 /**
@@ -75,14 +76,14 @@ export const FormField = memo<FormFieldProps>(({
     input: baseStyles.input,
     errorText: {
       fontSize: 12,
-      color: '#EF4444',
+      color: palette.status.error,
       marginTop: 4,
       fontWeight: '500',
     },
   });
 
-  const iconColor = isDark ? '#9CA3AF' : '#6B7280';
-  const placeholderColor = isDark ? '#6B7280' : '#8C8379';
+  const iconColor = isDark ? palette.text.iconDark : palette.text.placeholderDark;
+  const placeholderColor = isDark ? palette.text.placeholderDark : palette.text.placeholderLight;
 
   return (
     <View style={styles.inputGroup}>

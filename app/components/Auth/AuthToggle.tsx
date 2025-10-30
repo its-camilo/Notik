@@ -1,5 +1,6 @@
 import React, { memo, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { palette } from '@/styles/design-tokens';
 import type { AuthToggleProps, AuthMode } from '@/types/auth';
 
 /**
@@ -17,11 +18,11 @@ export const AuthToggle = memo<AuthToggleProps>(({
       maxWidth: 1200,
       width: '100%',
       alignSelf: 'center',
-      backgroundColor: isDark ? '#1E1E1E' : '#E6D8C9',
+      backgroundColor: isDark ? palette.neutral[875] : palette.beige[100],
       padding: 2,
       borderRadius: 28,
       borderWidth: 1,
-      borderColor: isDark ? '#2A2A2A' : '#D9CBBE',
+      borderColor: isDark ? palette.neutral[825] : palette.beige[300],
     },
     segment: {
       flex: 1,
@@ -31,19 +32,19 @@ export const AuthToggle = memo<AuthToggleProps>(({
       alignItems: 'center',
     },
     segmentActive: {
-      backgroundColor: isDark ? '#101010' : '#FFFFFF',
+      backgroundColor: isDark ? palette.neutral[975] : palette.pure.white,
       borderWidth: 1,
-      borderColor: isDark ? '#2A2A2A' : '#DCCFC2',
+      borderColor: isDark ? palette.neutral[825] : palette.beige[200],
     },
     segmentTextInactive: {
       fontSize: 15,
       fontWeight: '600',
-      color: isDark ? '#E5E5E5' : '#3F2E1F',
+      color: isDark ? palette.neutral[200] : palette.text.secondaryLight,
     },
     segmentTextActive: {
       fontSize: 15,
       fontWeight: '600',
-      color: isDark ? '#F5F5F5' : '#2B1C10',
+      color: isDark ? palette.neutral[25] : palette.beige.dark,
     },
   });
 

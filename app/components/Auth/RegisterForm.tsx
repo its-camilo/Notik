@@ -86,7 +86,7 @@ export const RegisterForm = React.memo<AuthFormProps>(({
     },
     subtitle: {
       fontSize: 14,
-      color: isDark ? palette.text.secondaryDark : '#6B7280',
+      color: isDark ? palette.text.secondaryDark : palette.text.placeholderDark,
       lineHeight: 20,
     },
     form: {

@@ -16,7 +16,7 @@ export const ThemeToggle = memo<ThemeToggleProps>(({ isDark, onToggle }) => {
       width: 48,
       height: 48,
       borderRadius: 24,
-      backgroundColor: isDark ? '#1E1E1E' : palette.surface.light,
+      backgroundColor: isDark ? palette.neutral[875] : palette.surface.light,
       justifyContent: 'center',
       alignItems: 'center',
       shadowColor: '#000',
@@ -25,12 +25,12 @@ export const ThemeToggle = memo<ThemeToggleProps>(({ isDark, onToggle }) => {
       shadowRadius: 4,
       elevation: 4,
       borderWidth: 1,
-      borderColor: isDark ? '#2A2A2A' : '#E5E2DC',
+      borderColor: isDark ? palette.neutral[825] : palette.beige[50],
     },
   });
 
   const iconName = isDark ? 'light-mode' : 'dark-mode';
-  const iconColor = isDark ? '#F9FAFB' : '#374151';
+  const iconColor = isDark ? palette.text.dark : palette.neutral[650];
 
   return (
     <TouchableOpacity
