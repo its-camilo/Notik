@@ -1,11 +1,12 @@
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { AuthResponse, User, LoginCredentials, RegisterCredentials } from '@/types/auth';
+import { BACKEND_URL } from '@/config/environment';
 
 /**
- * Servidor base de Strapi - constante global
+ * Servidor base de Strapi - importado desde configuración central
  */
-export const SERVER_URL = 'https://supportive-fireworks-d01261f76f.strapiapp.com' as const;
+export const SERVER_URL = BACKEND_URL;
 
 /**
  * Key para el token de autenticación
