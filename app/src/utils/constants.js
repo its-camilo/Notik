@@ -1,101 +1,76 @@
 /**
  * Configuración global de la aplicación
- * Backend SIEMPRE en Strapi Cloud - No se usa backend local
+ *
+ * IMPORTANTE: Este archivo ahora importa de config/environment.ts
+ * Para cambiar las URLs de frontend o backend, edita:
+ * app/config/environment.ts
  */
 
-// Función para detectar el entorno
-function detectEnvironment() {
-  // En Codespaces, process.env.CODESPACES está definido
-  const isCodespaces = typeof process !== 'undefined' && process.env.CODESPACES === 'true';
+import {
+  FRONTEND_URL,
+  BACKEND_URL,
+  API_URL,
+  ADMIN_URL,
+  ENV_INFO,
+  TIMEOUT_CONFIG,
+  DEFAULT_HEADERS,
+  DEBUG_CONFIG,
+  CODESPACES_PORTS,
+} from '@/config/environment';
 
-  // En web, podemos verificar la URL
-  const isCodespacesWeb = typeof window !== 'undefined' &&
-    window.location.hostname.includes('github.dev');
-
-  return {
-    isCodespaces: isCodespaces || isCodespacesWeb,
-    isLocal: !isCodespaces && !isCodespacesWeb
-  };
-}
-
-const { isCodespaces, isLocal } = detectEnvironment();
-
-// URLs base dependiendo del entorno (solo frontend, backend siempre en la nube)
-const getBaseURLs = () => {
-  if (isCodespaces) {
-    return {
-      FRONTEND_URL: `https://vigilant-spoon-5959j4vqjjr3v9xq.github.dev`,
-      STRAPI_CLOUD: "https://supportive-fireworks-d01261f76f.strapiapp.com"
-    };
-  } else {
-    return {
-      FRONTEND_URL: "http://localhost:8081",
-      STRAPI_CLOUD: "https://supportive-fireworks-d01261f76f.strapiapp.com"
-    };
-  }
-};
-
-const urls = getBaseURLs();
-
+/**
+ * Exportación principal de configuración
+ * Mantiene compatibilidad con código existente
+ */
 export const ENV = {
   // Información del entorno
-  ENVIRONMENT: isCodespaces ? "codespaces" : isLocal ? "local" : "production",
-  IS_CODESPACES: isCodespaces,
-  IS_LOCAL: isLocal,
+  ENVIRONMENT: ENV_INFO.FRONTEND_ENV, // o usa una lógica combinada si prefieres
+  IS_CODESPACES: ENV_INFO.IS_CODESPACES_FRONTEND || ENV_INFO.IS_CODESPACES_BACKEND,
+  IS_LOCAL: ENV_INFO.IS_LOCALHOST_FRONTEND && ENV_INFO.IS_LOCALHOST_BACKEND,
 
-  // URLs dinámicas
-  FRONTEND_URL: urls.FRONTEND_URL,
-
-  // Backend - SIEMPRE Strapi Cloud
-  API_URL: `${urls.STRAPI_CLOUD}/api`,
-  ADMIN_URL: `${urls.STRAPI_CLOUD}/admin`,
-  BASE_URL: urls.STRAPI_CLOUD,
+  // URLs dinámicas (desde config/environment.ts)
+  FRONTEND_URL,
+  API_URL,
+  ADMIN_URL,
+  BASE_URL: BACKEND_URL,
 
   // Configuración de red
-  TIMEOUT: 15000, // 15 segundos para Codespaces (conexión más lenta)
+  TIMEOUT: TIMEOUT_CONFIG.REQUEST_TIMEOUT,
 
   // Headers por defecto
-  DEFAULT_HEADERS: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  },
+  DEFAULT_HEADERS,
 
-  // Configuración de Keep Alive - Ajustada para Codespaces
+  // Configuración de Keep Alive
   KEEP_ALIVE: {
-    INTERVAL: isCodespaces ? 15 * 60 * 1000 : 10 * 60 * 1000, // 15 min en Codespaces, 10 min local
-    ENDPOINT: "/",
+    INTERVAL: TIMEOUT_CONFIG.KEEP_ALIVE_INTERVAL,
+    ENDPOINT: '/',
     ENABLED: true,
   },
 
-  // Debug - Más verboso en Codespaces
-  DEBUG: true,
-  VERBOSE_LOGS: isCodespaces,
+  // Debug
+  DEBUG: DEBUG_CONFIG.ENABLED,
+  VERBOSE_LOGS: DEBUG_CONFIG.VERBOSE_LOGS,
 
   // Configuración específica de Codespaces
   CODESPACES: {
-    DOMAIN: "ubiquitous-parakeet-rxwxqr74gpx2xx47.github.dev",
-    PORTS: {
-      FRONTEND: 8081,
-      BACKEND: 1337,
-      EXPO_METRO: 19000,
-      EXPO_DEVTOOLS: 19001,
-      WEB_PREVIEW: 3000
-    }
-  }
+    PORTS: CODESPACES_PORTS,
+  },
+
+  // Información adicional de entornos
+  ENV_INFO, // Exporta toda la info para casos avanzados
 };
 
-// Logging para debug
-if (ENV.DEBUG) {
-  console.log("🌍 Environment:", ENV.ENVIRONMENT);
-  console.log("📱 Frontend URL:", ENV.FRONTEND_URL);
-  console.log("🔗 API URL:", ENV.API_URL);
-  console.log("🔗 Admin URL:", ENV.ADMIN_URL);
-
-  if (ENV.IS_CODESPACES) {
-    console.log("☁️ Running in GitHub Codespaces");
-  }
-
-  if (ENV.VERBOSE_LOGS) {
-    console.log("🔧 Full ENV config:", ENV);
-  }
-}
+/**
+ * Re-exportar para facilitar importaciones directas
+ */
+export {
+  FRONTEND_URL,
+  BACKEND_URL,
+  API_URL,
+  ADMIN_URL,
+  ENV_INFO,
+  TIMEOUT_CONFIG,
+  DEFAULT_HEADERS,
+  DEBUG_CONFIG,
+  CODESPACES_PORTS,
+};
