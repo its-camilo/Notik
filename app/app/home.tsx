@@ -1,8 +1,10 @@
 import React, { useEffect } from "react";
-import { View, ActivityIndicator, Text } from "react-native";
+import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { MainScreen } from "@/src/screens/MainScreen";
 import { useAuth, AuthProvider } from "@/hooks";
+import { useTheme } from "@/hooks/useTheme";
+import { palette } from "@/styles/design-tokens";
 
 /**
  * Home route (/home) - Protected route that shows MainScreen
@@ -10,6 +12,7 @@ import { useAuth, AuthProvider } from "@/hooks";
  */
 function InnerHome() {
   const { isAuthenticated, isLoading, error } = useAuth();
+  const { isDark } = useTheme();
   const router = useRouter();
 
   // Redirect to auth page if not authenticated
@@ -19,19 +22,47 @@ function InnerHome() {
     }
   }, [isAuthenticated, isLoading, router]);
 
+  const styles = StyleSheet.create({
+    loadingContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: isDark ? palette.surface.dark : palette.surface.light,
+    },
+    loadingText: {
+      marginTop: 10,
+      color: isDark ? palette.text.secondaryDark : palette.text.placeholderDark,
+    },
+    errorContainer: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: isDark ? palette.surface.dark : palette.surface.light,
+      padding: 20,
+    },
+    errorTitle: {
+      color: palette.status.error,
+      textAlign: "center",
+      marginBottom: 10,
+      fontSize: 16,
+      fontWeight: "600" as const,
+    },
+    errorMessage: {
+      color: isDark ? palette.text.secondaryDark : palette.text.placeholderDark,
+      textAlign: "center",
+    },
+    mainContainer: {
+      flex: 1,
+      backgroundColor: isDark ? palette.surface.darkBase : palette.surface.lightBase,
+    },
+  });
+
   // Show loading while verifying authentication
   if (isLoading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#fff",
-        }}
-      >
-        <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={{ marginTop: 10, color: "#666" }}>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={palette.brand.brown} />
+        <Text style={styles.loadingText}>
           Cargando aplicación...
         </Text>
       </View>
@@ -41,21 +72,11 @@ function InnerHome() {
   // Show error if there's a problem with verification
   if (error) {
     return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: "#fff",
-          padding: 20,
-        }}
-      >
-        <Text
-          style={{ color: "#FF3B30", textAlign: "center", marginBottom: 10 }}
-        >
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorTitle}>
           Error de autenticación
         </Text>
-        <Text style={{ color: "#666", textAlign: "center" }}>{error}</Text>
+        <Text style={styles.errorMessage}>{error}</Text>
       </View>
     );
   }
@@ -63,7 +84,7 @@ function InnerHome() {
   // Only show MainScreen if authenticated
   if (isAuthenticated) {
     return (
-      <View style={{ flex: 1, backgroundColor: "#fff" }}>
+      <View style={styles.mainContainer}>
         <MainScreen />
       </View>
     );

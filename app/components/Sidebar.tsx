@@ -8,7 +8,6 @@ import React, {
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   Image,
@@ -129,74 +128,35 @@ const createSidebarStyles = (isDark: boolean, isMobile: boolean) =>
       fontWeight: "700",
       color: isDark ? palette.text.dark : palette.text.light,
     },
-    sectionLabel: {
-      fontSize: 12,
-      fontWeight: "600",
-      letterSpacing: 1,
-      textTransform: "uppercase",
-      color: isDark
-        ? palette.text.placeholderDark
-        : palette.text.placeholderLight,
-      marginBottom: spacing.sm,
-      marginTop: spacing.xs,
-    },
     tabsContainer: {
-      gap: spacing.sm,
+      marginTop: spacing.md,
     },
-    tabItem: {
+    dashboardTab: {
       flexDirection: "row",
       alignItems: "center",
-      paddingVertical: spacing.sm,
+      paddingVertical: spacing.md,
       paddingHorizontal: spacing.md,
-      minHeight: 44,
+      minHeight: 50,
       borderRadius: radius.md,
-      backgroundColor: isDark
-        ? palette.surface.darkAlt
-        : palette.surface.lightAlt,
-      borderWidth: 1,
-      borderColor: isDark ? palette.neutral[900] : palette.surface.borderAlt,
-      gap: spacing.sm,
-    },
-    tabItemActive: {
       backgroundColor: isDark ? palette.neutral[850] : palette.brand.brown,
+      borderWidth: 1,
       borderColor: isDark ? palette.neutral[850] : palette.brand.brown,
+      gap: spacing.sm,
+      shadowColor: palette.pure.black,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: isDark ? 0.3 : 0.15,
+      shadowRadius: 4,
+      elevation: 3,
     },
-    tabItemText: {
-      fontSize: 14,
+    dashboardIcon: {
+      width: 20,
+      height: 20,
+    },
+    dashboardText: {
+      fontSize: 15,
       fontWeight: "600",
-      color: isDark ? palette.text.dark : palette.pure.blackSoft,
-    },
-    tabItemTextActive: {
       color: palette.pure.white,
-    },
-    addTabButton: {
-      marginTop: spacing.sm,
-      flexDirection: "row",
-      alignItems: "center",
-      paddingVertical: spacing.sm,
-      minHeight: 44,
-      paddingHorizontal: spacing.md,
-      width: "100%",
-      justifyContent: "space-between",
-      borderRadius: radius.lg,
-      backgroundColor: isDark ? palette.surface.dark : palette.neutral[100],
-      borderWidth: 1,
-      borderColor: isDark ? palette.neutral[925] : palette.neutral[300],
-    },
-    addTabInput: {
       flex: 1,
-      fontSize: 14,
-      padding: 0,
-    },
-    plusBox: {
-      width: 28,
-      height: 28,
-      borderRadius: 8,
-      alignItems: "center",
-      justifyContent: "center",
-      borderWidth: 1,
-      borderColor: isDark ? palette.neutral[925] : palette.neutral[300],
-      backgroundColor: isDark ? palette.neutral[900] : palette.neutral[100],
     },
     footer: {
       marginTop: "auto",
@@ -246,7 +206,6 @@ export const Sidebar = React.memo<SidebarProps>(
     const { isMobile, isDesktop } = useBreakpoint();
 
     const [sidebarVisible, setSidebarVisible] = useState(isDesktop);
-    const [newTabName, setNewTabName] = useState("");
     const anim = useRef(new Animated.Value(isDesktop ? 0 : 1)).current;
 
     const styles = useMemo(
@@ -276,10 +235,6 @@ export const Sidebar = React.memo<SidebarProps>(
     const handleThemeToggle = useCallback(() => {
       onThemeToggle?.();
     }, [onThemeToggle]);
-
-    const handleNewTabChange = useCallback((text: string) => {
-      setNewTabName(text);
-    }, []);
 
     // Handle responsive sidebar behavior
     useEffect(() => {
@@ -365,39 +320,10 @@ export const Sidebar = React.memo<SidebarProps>(
         </View>
 
         <View style={{ flex: 1 }}>
-          <Text style={styles.sectionLabel}></Text>
-          <Text style={styles.sectionLabel}>Pestañas</Text>
           <View style={styles.tabsContainer}>
-            <View style={styles.addTabButton}>
-              <TextInput
-                value={newTabName}
-                onChangeText={handleNewTabChange}
-                placeholder="Nueva pestaña"
-                placeholderTextColor={isDark ? palette.neutral[600] : palette.neutral[500]}
-                style={[
-                  styles.addTabInput,
-                  { color: isDark ? palette.neutral[150] : palette.pure.blackSoft },
-                ]}
-                accessibilityLabel="Nombre de nueva pestaña"
-              />
-              <TouchableOpacity
-                onPress={() => {}}
-                activeOpacity={0.7}
-                accessibilityLabel="Agregar pestaña"
-              >
-                <View style={styles.plusBox}>
-                  <MaterialIcons
-                    name="add"
-                    size={16}
-                    color={isDark ? palette.neutral[150] : palette.pure.blackSoft}
-                  />
-                </View>
-              </TouchableOpacity>
-            </View>
-
-            <View style={[styles.tabItem, styles.tabItemActive]}>
-              <MaterialIcons name="folder" size={16} color={palette.pure.white} />
-              <Text style={[styles.tabItemText, styles.tabItemTextActive]}>
+            <View style={styles.dashboardTab}>
+              <MaterialIcons name="dashboard" size={22} color={palette.pure.white} style={styles.dashboardIcon} />
+              <Text style={styles.dashboardText}>
                 Dashboard
               </Text>
             </View>
